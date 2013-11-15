@@ -1,15 +1,17 @@
-import java.math.*;
 import	java.util.Scanner; 
 class vgbot {
 	
     public static void main(String[] args){
-   
+    	
+    	final int maximale_zuege_partie = 42;
 		int spielfeld[][] = new int[7][6];
 		int zz=0; // ist ne variable um zu erkennen wer am zug ist 0 ist p1.
+				
+		for(int j=0;j < maximale_zuege_partie ;j++){
 			
-		for(int j=0;j<20;j++){
+			
 			if(zz==0){ // wenn p1 drann ist, soll auch zugp1 aufgerufen werden.
-				spielfeld = spielfeld_updater(spielfeld, zugp1(spielfeld), zz);
+				spielfeld = spielfeld_updater(spielfeld, zugpx(spielfeld,zz), zz);
 				if (sieg_tester(spielfeld)==1){
 					break;
 				}
@@ -17,18 +19,24 @@ class vgbot {
 			}
 						
 			else{
-				spielfeld = spielfeld_updater(spielfeld, zugp2(spielfeld), zz);
+				spielfeld = spielfeld_updater(spielfeld, zugpx(spielfeld,zz), zz);
 				if (sieg_tester(spielfeld)==1){
 					break;
 				}
 				zz = 0;
 			}
 			
-			spielfeld_drucker(spielfeld);		
+			spielfeld_drucker(spielfeld);
+			
+			if(j== (maximale_zuege_partie - 1)){
+				System.out.print("Brett voll, unentschieden.");
+				break;
+			}
+			
 		}
 																	}
-													
-	public static int zugp1(int[][] playfield){
+	/*												
+    public static int zugp1(int[][] playfield){
 		int input_p1=0;	
 		int legal = 0;
 		Scanner so = new Scanner(System.in);	
@@ -78,6 +86,56 @@ class vgbot {
 		while(legal!=1);	
 		
 		return input_p2;
+	}
+	*/
+	public static int zugpx(int[][] playfield, int zz){
+		int input_p1=0;
+		int input_p2=0;	
+		int legal = 0;
+		Scanner so = new Scanner(System.in);
+		if (zz==1) {
+			do{
+				System.out.print("Bitte p2 Zug eingeben: ");		
+				input_p2 = so.nextInt();
+				for (int i=0; i<6; i++){ // geht von unten nach oben und sucht ne leere stelle in der spalte zugspieler
+					if (input_p2 > 6 || input_p2 < 0){ // fängt zu große oder kleine zugzahlen ab mit break.
+						break;
+					}
+					if (playfield[input_p2][i]==0){ // wenn stelle leer
+						legal = 1;
+						break;
+					}
+				}
+				if (legal==0){
+					System.out.print("\nZug illegal!\n");
+				}
+			}
+			while(legal!=1);	
+			so.close();
+			return input_p2;
+		}
+		else {
+			do{
+				System.out.print("Bitte p1 Zug eingeben: ");		
+				input_p1 = so.nextInt();
+				for (int i=0; i<6; i++){ // geht von unten nach oben und sucht ne leere stelle in der spalte zugspieler
+					if (input_p2 > 6 || input_p2 < 0){ // fängt zu große oder kleine zugzahlen ab mit break.
+						break;
+					}
+					if (playfield[input_p1][i]==0){ // wenn stelle leer
+						legal = 1;
+						break;
+					}
+				}
+				if (legal==0){
+					System.out.print("\nZug illegal!\n");
+				}
+			}
+			while(legal!=1);	
+			so.close();
+			return input_p1;
+		}
+		
 	}
 	
 	public static void spielfeld_drucker(int playfield[][]){	
@@ -246,8 +304,8 @@ class vgbot {
 						break;
 					}
 					score_p1 = 0;
-				}
 			}
+				}
 			
 			if (score_p1 == 4){
 				spielfeld_drucker(playfield);
